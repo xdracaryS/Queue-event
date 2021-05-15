@@ -23,8 +23,7 @@ EVENTFUNC(queque_event)
 	return info->time_cycle;
 }
 
-int queque()
-{
+
 	bool loop = False;
 	event_info* info = AllocEventInfo<event_info>();
 	info->time_cycle = loop ? 10 : 0;
@@ -37,7 +36,7 @@ int queque()
 	long event_count = event_count()
 
 	event_cancel(&event);//stop and remove..
-}
+
 
 Python:
 
