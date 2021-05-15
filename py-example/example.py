@@ -25,8 +25,8 @@ def TestFunctionNoLoop(str):
     dbg.TraceError("Hello from TestFunctionNoLoop %s"%str)
 
 def TestFunctionLoop(str, number, float_number):
-    dbg.TraceError("Hello from TestFunctionLoop")
-    return 5 # next event time to 5 second, if value is == 0 event will be remove. !IMPORTANT!
+	dbg.TraceError("Hello from TestFunctionLoop %s %d %.5f"%(str, number, float_number))
+	return 5 # next event time to 5 second, if value is == 0 event will be remove. !IMPORTANT!
 
 queque.quequeCreateEvent("not_loop_event",TestFunctionNoLoop,2,False, "TEST TEXT")
 queque.quequeCreateEvent("loop_event",TestFunctionLoop, 2, True, "Hello World", 13, 13.34)
