@@ -9,6 +9,11 @@ void QuequeManager::Destroy()
 	for (auto iter = m_queque_.begin(); m_queque_.end() != iter; ++iter)
 		event_cancel(&iter->second);
 	m_queque_.clear();
+	for (auto iter = m_callBack_.begin(); m_callBack_.end() != iter; ++iter)
+	{
+		Py_XDECREF(iter->second.first);
+		Py_XDECREF(iter->second.second);
+	}
 	m_callBack_.clear();
 }
 
@@ -39,13 +44,19 @@ EVENTFUNC(queque_event)
 	{
 		TraceError("<queque_event> <Factor> Null pointer");
 		return 0;
-	}	
-
-	PyObject* ptr = PyObject_CallObject(info->func, info->args);
-	if (!info->time_cycle)
-		return 0;
-	long returnBack = PyLong_AsLong(ptr);
-	return returnBack;
+	}
+	if (PyCallable_Check(info->func))
+	{
+		PyObject* ptr = PyObject_CallObject(info->func, info->args);
+		if (!info->time_cycle) {
+			Py_XDECREF(ptr);
+			return 0;
+		}
+		long returnBack = PyLong_AsLong(ptr);
+		Py_XDECREF(ptr);
+		return returnBack;
+	}
+	return 0;
 }
 
 LPEVENT QuequeManager::CheckEventName(const char* eventname)
@@ -101,7 +112,8 @@ void QuequeManager::RemoveCallBackEvent(const char* eventname)
 	auto iter = m_callBack_.find(eventname);
 	if (iter == m_callBack_.end())
 		return;
-	auto event_ptr = iter->second;
+	Py_XDECREF(iter->second.first);
+	Py_XDECREF(iter->second.second);
 	m_callBack_.erase(iter);
 }
 
