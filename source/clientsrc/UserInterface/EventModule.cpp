@@ -102,6 +102,8 @@ void QuequeManager::InsertCallBackEvent(const char* eventname, std::pair<PyObjec
 	if (CheckCallBackEventName(eventname))
 	{
 		TraceError("<callback_event> %s this call back event already have.", eventname);
+		Py_XDECREF(event_ptr.first);
+		Py_XDECREF(event_ptr.second);
 		return;
 	}
 	m_callBack_.emplace(eventname, event_ptr);
